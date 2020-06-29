@@ -18,8 +18,11 @@ void Draw(Core::Graphics& graphics)
 
 int main()
 {
-	char name[] = "put window name here"; 
+	char name[] = "CSC196"; 
 	Core::Init(name, 800, 600); 
+	Core::RegisterUpdateFn(Update); 
+	Core::RegisterDrawFn(Draw);
+
 	Core::GameLoop(); 
 	Core::Shutdown();
 }
