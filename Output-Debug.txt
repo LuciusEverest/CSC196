@@ -13,7 +13,7 @@
 'Game.exe' (Win32): Loaded 'C:\Windows\SysWOW64\ucrtbased.dll'. 
 'Game.exe' (Win32): Loaded 'C:\Users\umbre\source\repos\CSC196\Debug\msvcr100d.dll'. 
 'Game.exe' (Win32): Loaded 'C:\Windows\SysWOW64\imm32.dll'. 
-The thread 0x35d4 has exited with code 0 (0x0).
+The thread 0x4a40 has exited with code 0 (0x0).
 'Game.exe' (Win32): Loaded 'C:\Windows\SysWOW64\uxtheme.dll'. 
 'Game.exe' (Win32): Loaded 'C:\Windows\SysWOW64\msvcrt.dll'. 
 'Game.exe' (Win32): Loaded 'C:\Windows\SysWOW64\combase.dll'. 
@@ -29,16 +29,16 @@ The thread 0x35d4 has exited with code 0 (0x0).
 'Game.exe' (Win32): Loaded 'C:\Windows\SysWOW64\TextInputFramework.dll'. 
 'Game.exe' (Win32): Loaded 'C:\Windows\SysWOW64\CoreMessaging.dll'. 
 'Game.exe' (Win32): Loaded 'C:\Windows\SysWOW64\CoreUIComponents.dll'. 
+'Game.exe' (Win32): Loaded 'C:\Windows\SysWOW64\ntmarta.dll'. 
 'Game.exe' (Win32): Loaded 'C:\Windows\SysWOW64\SHCore.dll'. 
 'Game.exe' (Win32): Loaded 'C:\Windows\SysWOW64\WinTypes.dll'. 
 'Game.exe' (Win32): Loaded 'C:\Windows\SysWOW64\WinTypes.dll'. 
-'Game.exe' (Win32): Loaded 'C:\Windows\SysWOW64\ntmarta.dll'. 
 'Game.exe' (Win32): Unloaded 'C:\Windows\SysWOW64\WinTypes.dll'
 'Game.exe' (Win32): Loaded 'C:\Windows\SysWOW64\iertutil.dll'. 
 'Game.exe' (Win32): Loaded 'C:\Windows\SysWOW64\ole32.dll'. 
-The thread 0x3b04 has exited with code 0 (0x0).
-The thread 0x4610 has exited with code 0 (0x0).
-The thread 0x1708 has exited with code 0 (0x0).
-The thread 0x46dc has exited with code 0 (0x0).
-The thread 0x2544 has exited with code 0 (0x0).
-The program '[6920] Game.exe' has exited with code 0 (0x0).
+The thread 0x1fb0 has exited with code 0 (0x0).
+The thread 0x5d2c has exited with code 0 (0x0).
+The thread 0x29f0 has exited with code 0 (0x0).
+The thread 0x2f3c has exited with code 0 (0x0).
+The thread 0x3f98 has exited with code 0 (0x0).
+The program '[5972] Game.exe' has exited with code 0 (0x0).
