@@ -8,9 +8,12 @@
 #include "Math/Color.h"
 #include "core.h"
 #include <string>
+#include "Graphics/Shape.h"
 
 bleh::Color color{ 1,0,1 };
 std::vector<bleh::Vector2> points = { { 0, -3 }, { 3, 3 }, { 0, 1 }, { -3, 3 }, { 0, -3 } };
+bleh::Shape ship{ points, color };
+
 bleh::Vector2 position{ 400.0f, 300.0f };
 
 float speed = 300.0f;
@@ -87,28 +90,11 @@ void Draw(Core::Graphics& graphics)
 	graphics.DrawString(10, 30, std::to_string(deltaTime/1000.0f).c_str());
 	
 	if(gameOver) graphics.DrawString(400, 300, "Game Over!");
-	graphics.SetColor(color);
+	//graphics.SetColor(color);
 	//graphics.SetColor(RGB(rand() % 256, rand() % 256, rand() % 256));
 	//graphics.DrawLine(bleh::random(0.0f, 800.0f), bleh::random(0.0f, 600.0f), bleh::random(0.0f, 800.0f), bleh::random(0.0f, 600.0f));
 
-	for (size_t i = 0; i < points.size() - 1; i ++)
-	{
-		bleh::Vector2 p1 = points[i];
-		bleh::Vector2 p2 = points[i + 1];
-		
-		//transofrm
-		//scale
-		p1 = p1 * scale;
-		p2 = p2 * scale;
-		//rotate
-		p1 = bleh::Vector2::Rotate(p1, angle);
-		p2 = bleh::Vector2::Rotate(p2, angle);
-		//translate
-		p1 = p1 + position;
-		p2 = p2 + position;
-		
-		graphics.DrawLine(p1.x, p1.y, p2.x, p2.y);
-	}
+	ship.Draw(graphics, position, scale, angle);
 }
 
 int main()
