@@ -3,6 +3,7 @@
 #include "../Math/Color.h"
 #include "../Math/Vector2.h"
 #include <vector>
+#include <string>
 
 namespace bleh
 {
@@ -12,6 +13,8 @@ namespace bleh
 		Shape() {}
 		Shape(const std::vector<bleh::Vector2>& points, const Color& color) : m_points{ points }, m_color{ color } {}
 
+		bool Load(const std::string& filename);
+		
 		void Draw(Core::Graphics& graphics, bleh::Vector2 position, float scale = 1.0f, float angle = 0.0f);
 		
 		void SetColor(Color color) { m_color = color; }

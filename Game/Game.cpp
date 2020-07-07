@@ -10,9 +10,7 @@
 #include <string>
 #include "Graphics/Shape.h"
 
-bleh::Color color{ 1,0,1 };
-std::vector<bleh::Vector2> points = { { 0, -3 }, { 3, 3 }, { 0, 1 }, { -3, 3 }, { 0, -3 } };
-bleh::Shape ship{ points, color };
+bleh::Shape ship;
 
 bleh::Vector2 position{ 400.0f, 300.0f };
 
@@ -93,7 +91,7 @@ void Draw(Core::Graphics& graphics)
 	//graphics.SetColor(color);
 	//graphics.SetColor(RGB(rand() % 256, rand() % 256, rand() % 256));
 	//graphics.DrawLine(bleh::random(0.0f, 800.0f), bleh::random(0.0f, 600.0f), bleh::random(0.0f, 800.0f), bleh::random(0.0f, 600.0f));
-
+	
 	ship.Draw(graphics, position, scale, angle);
 }
 
@@ -101,6 +99,9 @@ int main()
 {
 	DWORD time = GetTickCount();
 	std::cout << time/1000/60/60/24 << std::endl;
+
+	ship.Load("ship.txt");
+	ship.SetColor(bleh::Color{ 1, 1, 1 });
 
 	char name[] = "CSC196"; 
 	Core::Init(name, 800, 600); 

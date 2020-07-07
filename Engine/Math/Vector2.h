@@ -1,5 +1,6 @@
 #pragma once
 
+#include <iostream>
 #include <cmath>
 
 namespace bleh
@@ -41,6 +42,8 @@ namespace bleh
 		{
 			return Vector2{ -x, -y };
 		}
+
+		friend std::istream& operator >> (std::istream& stream, Vector2& v); // stream >> v 
 
 		float Length() const;
 		float LengthSqr() const;
