@@ -9,18 +9,17 @@
 #include "core.h"
 #include <string>
 #include "Graphics/Shape.h"
+#include "Math\Transform.h"
 
 bleh::Shape ship;
-
-bleh::Vector2 position{ 400.0f, 300.0f };
+bleh::Transform transform{ {400, 300}, 4, 0 };
 
 float speed = 300.0f;
-float angle = 0.0f;
-float scale = 5.0f;
 
 float frameTime;
 float roundTime{ 0 };
 bool gameOver{ false };
+
 DWORD prevTime;
 DWORD deltaTime;
 
@@ -52,14 +51,14 @@ bool Update(float dt) // dt:delta time = (1/60) = 0.01667 | (1/90) = 0.0111
 	bleh::Vector2 force;
 	if (Core::Input::IsPressed('W')) { force = bleh::Vector2::forward * speed; }
 	bleh::Vector2 direction = force * dt; 
-	direction = bleh::Vector2::Rotate(direction, angle);
+	direction = bleh::Vector2::Rotate(direction, transform.angle);
 
-	position = position + direction;
+	transform.position = transform.position + direction;
 
-	if (position.x > 800) position.x = 0;
-	if (position.y > 800) position.y = 0;
-	if (position.x < 0) position.x = 800;
-	if (position.y < 0) position.y = 800;
+	if (transform.position.x > 800) transform.position.x = 0;
+	if (transform.position.y > 800) transform.position.y = 0;
+	if (transform.position.x < 0) transform.position.x = 800;
+	if (transform.position.y < 0) transform.position.y = 800;
 
 	//if (direction.Length() < 50.0f)
 	{
@@ -74,15 +73,15 @@ bool Update(float dt) // dt:delta time = (1/60) = 0.01667 | (1/90) = 0.0111
 		point = bleh::Vector2{ bleh::random(-10.0f, 10.0f), bleh::random(-10.0f, 10.0f) };
 	}*/
 
-	if (Core::Input::IsPressed('A')) angle -= dt * bleh::TWO_PI;
-	if (Core::Input::IsPressed('D')) angle += dt * bleh::TWO_PI;
+	if (Core::Input::IsPressed('A')) transform.angle -= dt * bleh::TWO_PI;
+	if (Core::Input::IsPressed('D')) transform.angle += dt * bleh::TWO_PI;
 
 	return quit; 
 }
 
 void Draw(Core::Graphics& graphics) 
 {
-
+	graphics.SetColor(bleh::Color{ 1,0,1 });
 	graphics.DrawString(10, 10, std::to_string(frameTime).c_str());
 	graphics.DrawString(10, 20, std::to_string(1.0f/frameTime).c_str());
 	graphics.DrawString(10, 30, std::to_string(deltaTime/1000.0f).c_str());
@@ -92,7 +91,7 @@ void Draw(Core::Graphics& graphics)
 	//graphics.SetColor(RGB(rand() % 256, rand() % 256, rand() % 256));
 	//graphics.DrawLine(bleh::random(0.0f, 800.0f), bleh::random(0.0f, 600.0f), bleh::random(0.0f, 800.0f), bleh::random(0.0f, 600.0f));
 	
-	ship.Draw(graphics, position, scale, angle);
+	ship.Draw(graphics, transform);
 }
 
 int main()
@@ -101,7 +100,6 @@ int main()
 	std::cout << time/1000/60/60/24 << std::endl;
 
 	ship.Load("ship.txt");
-	ship.SetColor(bleh::Color{ 1, 1, 1 });
 
 	char name[] = "CSC196"; 
 	Core::Init(name, 800, 600); 
