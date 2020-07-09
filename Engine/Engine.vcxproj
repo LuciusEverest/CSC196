@@ -162,6 +162,7 @@
     <ClInclude Include="Math\Random.h" />
     <ClInclude Include="Math\Transform.h" />
     <ClInclude Include="Math\Vector2.h" />
+    <ClInclude Include="Object\Actor.h" />
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
@@ -169,6 +170,7 @@
     <ClCompile Include="Graphics\Shape.cpp" />
     <ClCompile Include="Math\Color.cpp" />
     <ClCompile Include="Math\Transform.cpp" />
+    <ClCompile Include="Object\Actor.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
