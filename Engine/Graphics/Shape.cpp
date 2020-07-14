@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Shape.h"
 #include <fstream>
+#include <Math\Matrix22.h>
 
 namespace bleh
 {
@@ -39,17 +40,23 @@ namespace bleh
 	void Shape::Draw(Core::Graphics& graphics, bleh::Vector2 position, float scale, float angle)
 	{
 		graphics.SetColor(m_color);
+
+		bleh::Matrix22 mxScale;
+		mxScale.Scale(scale);
+
+		bleh::Matrix22 mxRotate;
+		mxRotate.Rotate(angle);
+
+		bleh::Matrix22 mx = mxScale * mxRotate;
+
 		for (size_t i = 0; i < m_points.size() - 1; i++)
 		{
 			// local / object space points
 			bleh::Vector2 p1 = m_points[i];
 			bleh::Vector2 p2 = m_points[i + 1];
-			//transform points
-			p1 = p1 * scale;
-			p2 = p2 * scale;
-			//rotate
-			p1 = bleh::Vector2::Rotate(p1, angle);
-			p2 = bleh::Vector2::Rotate(p2, angle);
+			// scale / rotate
+			p1 = p1 * mx;
+			p2 = p2 * mx;
 			//translate
 			p1 = p1 + position;
 			p2 = p2 + position;
