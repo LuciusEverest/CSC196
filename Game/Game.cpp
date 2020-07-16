@@ -13,55 +13,94 @@
 #include "Object/Actor.h"
 #include "Player.h"
 #include "Enemy.h"
+#include <list>
 
-Player player;
-Enemy enemy;
-
-float speed = 300.0f;
-bleh::Vector2 velocity;
-float thrust = 300.0f;
+std::list<bleh::Actor*> sceneActors;
 
 float frameTime;
-float roundTime{ 0 };
-bool gameOver{ false };
+float spawnTimer{ 0 };
 
-float t{ 0 };
+template<typename T>
+T* GetActor()
+{
+	T* actor{ nullptr };
 
-DWORD prevTime;
-DWORD deltaTime;
+	for (bleh::Actor* a : sceneActors)
+	{
+		actor = dynamic_cast<T*>(a);
+		if (actor != nullptr)break;
+	}
+
+	return actor;
+}
+
+template<typename T>
+std::vector<T*> GetActors()
+{
+	std::vector<T*> actors;
+
+	for (bleh::Actor* a : sceneActors)
+	{
+		T* actor = dynamic_cast<T*>(a);
+		if (actor)
+		{
+			actors.push_back(actor);
+		}
+	}
+
+	return actors;
+}
+
+void RemoveActor(bleh::Actor* actor)
+{
+	auto iter = std::find(sceneActors.begin(), sceneActors.end(), actor);
+	if (iter != sceneActors.end())
+	{
+		delete* iter;
+		sceneActors.erase(iter);
+	}
+}
 
 bool Update(float dt) // dt:delta time = (1/60) = 0.01667 | (1/90) = 0.0111
 {
 	frameTime = dt;
-	roundTime += dt;
-	if (roundTime >= 5) gameOver = true;
 
-	//dt *= 2; //speed up
-	//dt *= -dt; //reverse controls
-	//if (gameOver) dt = 0;
+	spawnTimer += dt;
+	if (spawnTimer >= 3.0f)
+	{
+		spawnTimer = 0;
 
-	t = t + (dt * 5.0f);
+		//spawn enemy
+		Enemy* enemy = new Enemy;
+		enemy->Load("enemy.txt");
+		enemy->SetTarget(GetActor<Player>());
+		enemy->SetSpeed(bleh::random(50, 100));
 
-	//get delta time
-	DWORD time = GetTickCount();
-	deltaTime = time - prevTime;
-	prevTime = time;
+		enemy->GetTransform().position = bleh::Vector2{ bleh::random(0, 800), bleh::random(0, 600) };
+		sceneActors.push_back(enemy);
+	}
+
+	if (Core::Input::IsPressed(VK_SPACE))
+	{
+		Enemy* enemy = GetActor<Enemy>();
+		RemoveActor(enemy);
+
+
+		/*auto enemies = GetActors<Enemy>();
+		for (Enemy* enemy : enemies)
+		{
+			RemoveActor(enemy);
+
+		}*/
+
+	}
 
 	bool quit = Core::Input::IsPressed(Core::Input::KEY_ESCAPE);
 
-	int x, y;
-	Core::Input::GetMousePos(x, y);
-
-	//bleh::Vector2 target = bleh::Vector2{ x, y };
-	//bleh::Vector2 direction = target - position; //head - tail <-
-
-	//direction.Normalize();
-
-	//PLAYER
-	player.Update(dt);
-	
-	//ENEMY
-	enemy.Update(dt);
+	for (bleh::Actor* actor : sceneActors)
+	{
+		actor->Update(dt);
+	}
 
 	return quit; 
 }
@@ -69,32 +108,42 @@ bool Update(float dt) // dt:delta time = (1/60) = 0.01667 | (1/90) = 0.0111
 void Draw(Core::Graphics& graphics) 
 {
 	graphics.SetColor(bleh::Color{ 1, 0, 1 });
-	graphics.DrawString(10, 10, std::to_string(frameTime).c_str());
-	graphics.DrawString(10, 20, std::to_string(1.0f/frameTime).c_str());
-	graphics.DrawString(10, 30, std::to_string(deltaTime/1000.0f).c_str());
 	
-	float v = (std::sin(t) + 1.0f) * 0.5f; // (-1 <-> 1) -> (0 - 2)
-
-	bleh::Color c = bleh::Lerp(bleh::Color{ 1, 0, 0 }, bleh::Color{ 0, 1, 1 }, v);
+	/*bleh::Color c = bleh::Lerp(bleh::Color{ 1, 0, 0 }, bleh::Color{ 0, 1, 1 }, v);
 	graphics.SetColor(c);
 	bleh::Vector2 p = bleh::Lerp(bleh::Vector2{ 200,200 }, bleh::Vector2{ 600,200 }, v);
-	graphics.DrawString(p.x, p.y, "Last Starfighter");
+	graphics.DrawString(p.x, p.y, "Last Starfighter");*/
 
 	//if(gameOver) graphics.DrawString(400, 300, "Game Over!");
-	
-	player.Draw(graphics);
-	enemy.Draw(graphics);
+
+	for (bleh::Actor* actor : sceneActors)
+	{
+		actor->Draw(graphics);
+	}
 }
 
 int main()
 {
-	DWORD time = GetTickCount();
-	std::cout << time/1000/60/60/24 << std::endl;
+	/*DWORD time = GetTickCount();
+	std::cout << time/1000/60/60/24 << std::endl;*/
 
-	player.Load("player.txt");
-	enemy.Load("enemy.txt");
+	//initialize
+	bleh::Actor* player = new Player;
+	player->Load("player.txt");
+	sceneActors.push_back(player);
 
-	enemy.SetTarget(&player);
+	for (size_t i = 0; i < 10; i++)
+	{
+		bleh::Actor* actor = new Enemy;
+		actor->Load("enemy.txt");
+
+		Enemy* enemy = dynamic_cast<Enemy*>(actor);
+		enemy->SetTarget(player);
+		enemy->SetSpeed(bleh::random(50, 100));
+
+		actor->GetTransform().position = bleh::Vector2{ bleh::random(0, 800), bleh::random(0, 600) };
+		sceneActors.push_back(actor);
+	}
 
 	char name[] = "CSC196"; 
 	Core::Init(name, 800, 600); 

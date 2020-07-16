@@ -50,6 +50,9 @@
     <ClInclude Include="Math\Matrix22.h">
       <Filter>Math</Filter>
     </ClInclude>
+    <ClInclude Include="Math\Matrix33.h">
+      <Filter>Math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">
@@ -57,9 +60,6 @@
     </ClCompile>
     <ClCompile Include="Graphics\Shape.cpp">
       <Filter>Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="Vector2.cpp">
-      <Filter>Math</Filter>
     </ClCompile>
     <ClCompile Include="pch.cpp">
       <Filter>Source Files</Filter>
@@ -72,6 +72,9 @@
     </ClCompile>
     <ClCompile Include="Object\Actor.cpp">
       <Filter>Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Math\Vector2.cpp">
+      <Filter>Math</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

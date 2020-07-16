@@ -29,8 +29,9 @@ void Enemy::Update(float dt)
 {
 	bleh::Vector2 direction = m_target-> GetTransform().position - m_transform.position;
 	direction.Normalize();
-	bleh::Vector2 enemyVelocity = direction * 100.0f;
+	bleh::Vector2 enemyVelocity = direction * m_speed;
 	m_transform.position = m_transform.position + (enemyVelocity * dt);
 	m_transform.angle = std::atan2(direction.y, direction.x) + bleh::DegreesToRadians(90.0f);
 
+	m_transform.Update();
 }

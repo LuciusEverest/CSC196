@@ -30,8 +30,9 @@ namespace bleh
 	{
 		stream >> m_transform;
 
-		std::string shapename;      
-		stream >> shapename;       
+		std::string shapename;
+		std::getline(stream, shapename);
+
 		m_shape.Load(shapename);
 	}
 

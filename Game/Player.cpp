@@ -50,4 +50,5 @@ void Player::Update(float dt)
 	if (Core::Input::IsPressed('A')) m_transform.angle -= dt * bleh::DegreesToRadians(m_rotation);
 	if (Core::Input::IsPressed('D')) m_transform.angle += dt * bleh::DegreesToRadians(m_rotation);
 
+	m_transform.Update();
 }
