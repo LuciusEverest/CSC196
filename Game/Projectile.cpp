@@ -1,8 +1,8 @@
-#include "Enemy.h"
+#include "Projectile.h"
 #include <fstream>
 #include <Math\Math.h>
 
-bool Enemy::Load(const std::string& filename)
+bool Projectile::Load(const std::string& filename)
 {
 	bool success = false;
 
@@ -17,28 +17,26 @@ bool Enemy::Load(const std::string& filename)
 		stream >> m_transform;
 
 		std::string shapename;
-		stream >> shapename;
+		std::getline(stream, shapename);
 		m_shape.Load(shapename);
-
+		
 	}
 
 	return success;
 }
 
-void Enemy::Update(float dt)
+void Projectile::Update(float dt)
 {
-	bleh::Vector2 direction = m_target-> GetTransform().position - m_transform.position;
-	direction.Normalize();
+	bleh::Vector2 direction = bleh::Vector2::Rotate(bleh::Vector2::forward, m_transform.angle);
 	bleh::Vector2 velocity = direction * m_speed;
 	m_transform.position = m_transform.position + (velocity * dt);
-	m_transform.angle = std::atan2(direction.y, direction.x) + bleh::DegreesToRadians(90.0f);
 
 	m_transform.Update();
 }
 
-void Enemy::OnCollision(Actor* actor)
+void Projectile::OnCollision(Actor* actor)
 {
-	if (actor->GetType() == eType::PROJECTILE)
+	if (actor->GetType() == eType::ENEMY)
 	{
 		m_destroy = true;
 	}

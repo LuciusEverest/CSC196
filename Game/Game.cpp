@@ -14,52 +14,13 @@
 #include "Player.h"
 #include "Enemy.h"
 #include <list>
+#include <Scene.h>
 
-std::list<bleh::Actor*> sceneActors;
+bleh::Scene scene;
 
 float frameTime;
 float spawnTimer{ 0 };
 
-template<typename T>
-T* GetActor()
-{
-	T* actor{ nullptr };
-
-	for (bleh::Actor* a : sceneActors)
-	{
-		actor = dynamic_cast<T*>(a);
-		if (actor != nullptr)break;
-	}
-
-	return actor;
-}
-
-template<typename T>
-std::vector<T*> GetActors()
-{
-	std::vector<T*> actors;
-
-	for (bleh::Actor* a : sceneActors)
-	{
-		T* actor = dynamic_cast<T*>(a);
-		if (actor)
-		{
-			actors.push_back(actor);
-		}
-	}
-
-	return actors;
-}
-
-void RemoveActor(bleh::Actor* actor)
-{
-	auto iter = std::find(sceneActors.begin(), sceneActors.end(), actor);
-	if (iter != sceneActors.end())
-	{
-		delete* iter;
-		sceneActors.erase(iter);
-	}
-}
 
 bool Update(float dt) // dt:delta time = (1/60) = 0.01667 | (1/90) = 0.0111
 {
@@ -73,34 +34,31 @@ bool Update(float dt) // dt:delta time = (1/60) = 0.01667 | (1/90) = 0.0111
 		//spawn enemy
 		Enemy* enemy = new Enemy;
 		enemy->Load("enemy.txt");
-		enemy->SetTarget(GetActor<Player>());
+		enemy->SetTarget(scene.GetActor<Player>());
 		enemy->SetSpeed(bleh::random(50, 100));
 
 		enemy->GetTransform().position = bleh::Vector2{ bleh::random(0, 800), bleh::random(0, 600) };
-		sceneActors.push_back(enemy);
+		scene.AddActor(enemy);
 	}
 
-	if (Core::Input::IsPressed(VK_SPACE))
-	{
-		Enemy* enemy = GetActor<Enemy>();
-		RemoveActor(enemy);
+	//if (Core::Input::IsPressed(VK_SPACE))
+	//{
+	//	Enemy* enemy = scene.GetActor<Enemy>();
+	//	scene.RemoveActor(enemy);
 
 
-		/*auto enemies = GetActors<Enemy>();
-		for (Enemy* enemy : enemies)
-		{
-			RemoveActor(enemy);
+	//	/*auto enemies = GetActors<Enemy>();
+	//	for (Enemy* enemy : enemies)
+	//	{
+	//		RemoveActor(enemy);
 
-		}*/
+	//	}*/
 
-	}
+	//}
 
 	bool quit = Core::Input::IsPressed(Core::Input::KEY_ESCAPE);
 
-	for (bleh::Actor* actor : sceneActors)
-	{
-		actor->Update(dt);
-	}
+	scene.Update(dt);
 
 	return quit; 
 }
@@ -109,6 +67,8 @@ void Draw(Core::Graphics& graphics)
 {
 	graphics.SetColor(bleh::Color{ 1, 0, 1 });
 	
+	scene.Draw(graphics);
+
 	/*bleh::Color c = bleh::Lerp(bleh::Color{ 1, 0, 0 }, bleh::Color{ 0, 1, 1 }, v);
 	graphics.SetColor(c);
 	bleh::Vector2 p = bleh::Lerp(bleh::Vector2{ 200,200 }, bleh::Vector2{ 600,200 }, v);
@@ -116,10 +76,6 @@ void Draw(Core::Graphics& graphics)
 
 	//if(gameOver) graphics.DrawString(400, 300, "Game Over!");
 
-	for (bleh::Actor* actor : sceneActors)
-	{
-		actor->Draw(graphics);
-	}
 }
 
 int main()
@@ -127,10 +83,12 @@ int main()
 	/*DWORD time = GetTickCount();
 	std::cout << time/1000/60/60/24 << std::endl;*/
 
+	scene.Startup();
+
 	//initialize
 	bleh::Actor* player = new Player;
 	player->Load("player.txt");
-	sceneActors.push_back(player);
+	scene.AddActor(player);
 
 	for (size_t i = 0; i < 10; i++)
 	{
@@ -142,7 +100,7 @@ int main()
 		enemy->SetSpeed(bleh::random(50, 100));
 
 		actor->GetTransform().position = bleh::Vector2{ bleh::random(0, 800), bleh::random(0, 600) };
-		sceneActors.push_back(actor);
+		scene.AddActor(actor);
 	}
 
 	char name[] = "CSC196"; 
