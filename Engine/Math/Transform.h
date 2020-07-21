@@ -11,8 +11,8 @@ namespace bleh
 
 		Matrix33 matrix;
 
-		Transform() : position{ 0,0 }, scale{ 0 }, angle{ 0 } {}
-		Transform(Vector2 position, float scale = 1, float angle = 0) : position{ position }, scale{ scale }, angle{ angle } {}
+		Transform() : position{ 0,0 }, scale{ 0 }, angle{ 0 }, matrix{} {}
+		Transform(Vector2 position, float scale = 1, float angle = 0) : position{ position }, scale{ scale }, angle{ angle }, matrix{} {}
 	
 		void Update();
 

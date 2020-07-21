@@ -10,7 +10,7 @@ namespace bleh
 		Vector2 prevPosition;
 		Vector2 velocity;
 		Color color;
-		float lifetime;
+		float lifetime{ 0 };
 		bool active{ false };
 	};
 }

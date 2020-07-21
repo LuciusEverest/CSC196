@@ -69,14 +69,14 @@ bool Update(float dt) // dt:delta time = (1/60) = 0.01667 | (1/90) = 0.0111
 	{
 		bleh::Color colors[] = { {1,1,1}, {1,0,0}, {1,1,0}, {0,1,1} };
 		bleh::Color color = colors[rand() % 4];
-		particleSystem.Create({ x,y }, player->GetTransform().angle + bleh::PI, 180, 30, 1, color, 100, 200);
+		particleSystem.Create({ x,y }, 0, 180, 30, 1, color, 100, 200);
 
 	}
 
 	if (Core::Input::IsPressed('Z'))
 	{
 		bleh::Color colors[] = { {1,1,1}, {1,0,0}, {0,1,1} };
-		bleh::Color color = colors[rand() % 4];
+		bleh::Color color = colors[rand() % 3];
 		particleSystem.Create(player->GetTransform().position, player->GetTransform().angle + bleh::PI, 180, 30, 1, color, 100, 200);
 
 	}
