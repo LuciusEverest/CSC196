@@ -4,6 +4,11 @@
 
 namespace bleh
 {
+	Color const Color::white{ 1,1,1 };
+	Color const Color::green{ 1,0,0 };
+	Color const Color::red{ 0,1,0 };
+	Color const Color::blue{ 0,0,1 };
+
     std::istream& operator >> (std::istream& stream, Color& c)
     {
 		std::string line;

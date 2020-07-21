@@ -13,14 +13,15 @@
 #include "Object/Actor.h"
 #include "Player.h"
 #include "Enemy.h"
+#include "Graphics/ParticleSystem.h"
 #include <list>
 #include <Scene.h>
 
 bleh::Scene scene;
+bleh::ParticleSystem particleSystem;
 
 float frameTime;
 float spawnTimer{ 0 };
-
 
 bool Update(float dt) // dt:delta time = (1/60) = 0.01667 | (1/90) = 0.0111
 {
@@ -58,6 +59,30 @@ bool Update(float dt) // dt:delta time = (1/60) = 0.01667 | (1/90) = 0.0111
 
 	bool quit = Core::Input::IsPressed(Core::Input::KEY_ESCAPE);
 
+	Player* player = scene.GetActor<Player>();
+	particleSystem.Create(player->GetTransform().position, player->GetTransform().angle + bleh::PI, 20, 1, 1, bleh::Color{ 1, 1, 1 }, 100, 200);
+	
+	int x, y;
+	Core::Input::GetMousePos(x, y);
+	
+	if (Core::Input::IsPressed(Core::Input::BUTTON_LEFT))
+	{
+		bleh::Color colors[] = { {1,1,1}, {1,0,0}, {1,1,0}, {0,1,1} };
+		bleh::Color color = colors[rand() % 4];
+		particleSystem.Create({ x,y }, player->GetTransform().angle + bleh::PI, 180, 30, 1, color, 100, 200);
+
+	}
+
+	if (Core::Input::IsPressed('Z'))
+	{
+		bleh::Color colors[] = { {1,1,1}, {1,0,0}, {0,1,1} };
+		bleh::Color color = colors[rand() % 4];
+		particleSystem.Create(player->GetTransform().position, player->GetTransform().angle + bleh::PI, 180, 30, 1, color, 100, 200);
+
+	}
+
+
+	particleSystem.Update(dt);
 	scene.Update(dt);
 
 	return quit; 
@@ -67,6 +92,7 @@ void Draw(Core::Graphics& graphics)
 {
 	graphics.SetColor(bleh::Color{ 1, 0, 1 });
 	
+	particleSystem.Draw(graphics);
 	scene.Draw(graphics);
 
 	/*bleh::Color c = bleh::Lerp(bleh::Color{ 1, 0, 0 }, bleh::Color{ 0, 1, 1 }, v);
@@ -83,7 +109,9 @@ int main()
 	/*DWORD time = GetTickCount();
 	std::cout << time/1000/60/60/24 << std::endl;*/
 
+	//intialize engine
 	scene.Startup();
+	particleSystem.Startup();
 
 	//initialize
 	bleh::Actor* player = new Player;
@@ -110,4 +138,8 @@ int main()
 
 	Core::GameLoop(); 
 	Core::Shutdown();
+
+	//shutdown engine
+	particleSystem.Shutdown();
+	scene.Shutdown();
 }
