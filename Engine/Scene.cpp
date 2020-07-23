@@ -11,14 +11,7 @@ namespace bleh
 
 	void bleh::Scene::Shutdown()
 	{
-		for (Actor* actor : m_actors)
-		{
-			delete actor;
-		}
-		// iterate through the actors and call delete on each actor
-		// this will free up the memory for each actor
-	
-		m_actors.clear(); // clear m_actors list
+		RemoveAllActors();
 	}
 
 	void bleh::Scene::Update(float dt)
@@ -84,5 +77,16 @@ namespace bleh
 		{
 			delete* iter; m_actors.erase(iter); 
 		}
+	}
+	void Scene::RemoveAllActors()
+	{
+		for (Actor* actor : m_actors)
+		{
+			delete actor;
+		}
+		// iterate through the actors and call delete on each actor
+		// this will free up the memory for each actor
+
+		m_actors.clear();
 	}
 }

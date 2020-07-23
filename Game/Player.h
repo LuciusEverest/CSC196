@@ -9,6 +9,8 @@ public:
 
 	virtual eType GetType() override { return eType::PLAYER; }
 
+	virtual void OnCollision(Actor* actor) override;
+
 	virtual bool Load(const std::string& filename) override;
 	virtual void Update(float dt) override;
 
@@ -18,5 +20,8 @@ protected:
 
 	float m_fireRate{ 0.2f };
 	float m_fireTimer{ 0 };
+
+	bool m_prevButtonPress{ false };
+
 	bleh::Vector2 m_velocity;
 };

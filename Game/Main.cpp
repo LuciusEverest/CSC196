@@ -5,9 +5,11 @@
 #include "Math/Math.h"
 #include "Math/Random.h"
 #include "Math/Vector2.h"
+#include "Graphics/ParticleSystem.h"
 #include "Math/Color.h"
 #include "core.h"
 #include "Game.h"
+#include <time.h>
 
 Game game;
 
@@ -25,6 +27,10 @@ void Draw(Core::Graphics& graphics)
 
 int main()
 {
+	//startup engine
+	srand(static_cast<unsigned int>(time(NULL)));
+	g_particleSystem.Startup();
+
 	game.Initialize();
 
 	char name[] = "CSC196"; 

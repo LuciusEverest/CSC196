@@ -1,6 +1,8 @@
 #include "Enemy.h"
 #include <fstream>
 #include "Graphics/ParticleSystem.h"  
+#include "Scene.h"  
+#include "../Game/Game.h"  
 #include <Math\Math.h>
 
 bool Enemy::Load(const std::string& filename)
@@ -42,6 +44,9 @@ void Enemy::OnCollision(Actor* actor)
 	if (actor->GetType() == eType::PROJECTILE)
 	{
 		m_destroy = true;
+
+		// set game points/score
+		m_scene->GetGame()->AddPoints(100);
 
 		bleh::Color colors[] = { {1,1,0}, {1,0,0}, {0,1,1} };
 		bleh::Color color = colors[rand() % 3];

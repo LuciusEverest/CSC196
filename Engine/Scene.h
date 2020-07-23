@@ -4,6 +4,8 @@
 #include <core.h>
 #include <list>
 
+class Game;
+
 namespace bleh
 {
 	class Scene
@@ -14,9 +16,6 @@ namespace bleh
 
 		void Update(float dt);
 		void Draw(Core::Graphics& graphics);
-
-		void AddActor(class Actor* actor);
-		void RemoveActor(class Actor* actor);
 
 		template<typename T>
 		T* GetActor()
@@ -49,7 +48,15 @@ namespace bleh
 			return actors;
 		}
 
+		void AddActor(class Actor* actor);
+		void RemoveActor(class Actor* actor);
+		void RemoveAllActors();
+
+		void SetGame(Game* game) { m_game = game; }
+		Game* GetGame() { return m_game; }
+
 	private:
+		Game* m_game;
 		std::list<class Actor*> m_actors;
 	};
 }

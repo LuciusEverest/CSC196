@@ -2,8 +2,19 @@
 #include "Math/Math.h"
 #include <fstream>
 #include "Projectile.h"
-#include "Scene.h"
+#include "Scene.h" 
+#include "../Game/Game.h" 
 #include "Graphics/ParticleSystem.h"
+#include "Math/Random.h"
+
+void Player::OnCollision(Actor* actor)
+{
+	if (actor->GetType() == eType::ENEMY)
+	{
+		//m_destroy = true;
+		m_scene->GetGame()->SetState(Game::eState::GAME_OVER);
+	}
+}
 
 bool Player::Load(const std::string& filename)
 {
@@ -73,6 +84,12 @@ void Player::Update(float dt)
 		g_particleSystem.Create(m_transform.position, m_transform.angle + bleh::PI, 20, 1, 1, bleh::Color{ 1, 1, 1 }, 100, 200);
 	}
 
+	if (Core::Input::IsPressed('E') && !m_prevButtonPress)
+	{
+		m_transform.position = bleh::Vector2{ bleh::random(0, 800), bleh::random(0, 600) };
+		m_transform.angle = bleh::random(0, bleh::TWO_PI);
+	}
+	m_prevButtonPress = Core::Input::IsPressed('E');
 
 	m_transform.Update();
 }
