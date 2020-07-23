@@ -45,4 +45,9 @@ namespace bleh
     {
         m_shape.Draw(graphics, m_transform); // draw shape using transform
     }
+
+	float Actor::GetRadius()
+	{
+		return m_shape.GetRadius() * m_transform.scale;
+	}
 }

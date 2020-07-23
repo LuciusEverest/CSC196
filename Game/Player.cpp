@@ -3,6 +3,7 @@
 #include <fstream>
 #include "Projectile.h"
 #include "Scene.h"
+#include "Graphics/ParticleSystem.h"
 
 bool Player::Load(const std::string& filename)
 {
@@ -45,7 +46,7 @@ void Player::Update(float dt)
 
 	//PLAYER
 	//get force
-	bleh::Vector2 force;
+	bleh::Vector2 force{ 0,0 };
 	if (Core::Input::IsPressed('W')) { force = bleh::Vector2::forward * m_thrust; }
 	//point force in direction of ship
 	force = bleh::Vector2::Rotate(force, m_transform.angle);
@@ -65,6 +66,13 @@ void Player::Update(float dt)
 
 	if (Core::Input::IsPressed('A')) m_transform.angle -= dt * bleh::DegreesToRadians(m_rotation);
 	if (Core::Input::IsPressed('D')) m_transform.angle += dt * bleh::DegreesToRadians(m_rotation);
+
+
+	if (force.LengthSqr() > 0)
+	{
+		g_particleSystem.Create(m_transform.position, m_transform.angle + bleh::PI, 20, 1, 1, bleh::Color{ 1, 1, 1 }, 100, 200);
+	}
+
 
 	m_transform.Update();
 }

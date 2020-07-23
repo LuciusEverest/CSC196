@@ -41,7 +41,7 @@ namespace bleh
 			for (size_t j = 0; j < actors.size(); j++)
 			{
 				float distance = bleh::Vector2::Distance(actors[i]->GetTransform().position, actors[j]->GetTransform().position);
-				if (distance <= 10)
+				if (distance <= (actors[i]->GetRadius() + actors[j]->GetRadius()))
 				{
 					actors[i]->OnCollision(actors[j]);
 					actors[j]->OnCollision(actors[i]);

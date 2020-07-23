@@ -1,12 +1,4 @@
-// Game.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
-
-#include <iostream>
-#include "Math/Math.h"
-#include "Math/Random.h"
-#include "Math/Vector2.h"
-#include "Math/Color.h"
-#include "core.h"
+#include "Game.h"
 #include <string>
 #include "Graphics/Shape.h"
 #include "Math\Transform.h"
@@ -16,107 +8,20 @@
 #include "Graphics/ParticleSystem.h"
 #include <list>
 #include <Scene.h>
+#include <Math\Random.h>
 
-bleh::Scene scene;
-bleh::ParticleSystem particleSystem;
-
-float frameTime;
-float spawnTimer{ 0 };
-
-bool Update(float dt) // dt:delta time = (1/60) = 0.01667 | (1/90) = 0.0111
-{
-	frameTime = dt;
-
-	spawnTimer += dt;
-	if (spawnTimer >= 3.0f)
-	{
-		spawnTimer = 0;
-
-		//spawn enemy
-		Enemy* enemy = new Enemy;
-		enemy->Load("enemy.txt");
-		enemy->SetTarget(scene.GetActor<Player>());
-		enemy->SetSpeed(bleh::random(50, 100));
-
-		enemy->GetTransform().position = bleh::Vector2{ bleh::random(0, 800), bleh::random(0, 600) };
-		scene.AddActor(enemy);
-	}
-
-	//if (Core::Input::IsPressed(VK_SPACE))
-	//{
-	//	Enemy* enemy = scene.GetActor<Enemy>();
-	//	scene.RemoveActor(enemy);
-
-
-	//	/*auto enemies = GetActors<Enemy>();
-	//	for (Enemy* enemy : enemies)
-	//	{
-	//		RemoveActor(enemy);
-
-	//	}*/
-
-	//}
-
-	bool quit = Core::Input::IsPressed(Core::Input::KEY_ESCAPE);
-
-	Player* player = scene.GetActor<Player>();
-	particleSystem.Create(player->GetTransform().position, player->GetTransform().angle + bleh::PI, 20, 1, 1, bleh::Color{ 1, 1, 1 }, 100, 200);
-	
-	int x, y;
-	Core::Input::GetMousePos(x, y);
-	
-	if (Core::Input::IsPressed(Core::Input::BUTTON_LEFT))
-	{
-		bleh::Color colors[] = { {1,1,1}, {1,0,0}, {1,1,0}, {0,1,1} };
-		bleh::Color color = colors[rand() % 4];
-		particleSystem.Create({ x,y }, 0, 180, 30, 1, color, 100, 200);
-
-	}
-
-	if (Core::Input::IsPressed('Z'))
-	{
-		bleh::Color colors[] = { {1,1,1}, {1,0,0}, {0,1,1} };
-		bleh::Color color = colors[rand() % 3];
-		particleSystem.Create(player->GetTransform().position, player->GetTransform().angle + bleh::PI, 180, 30, 1, color, 100, 200);
-
-	}
-
-
-	particleSystem.Update(dt);
-	scene.Update(dt);
-
-	return quit; 
-}
-
-void Draw(Core::Graphics& graphics) 
-{
-	graphics.SetColor(bleh::Color{ 1, 0, 1 });
-	
-	particleSystem.Draw(graphics);
-	scene.Draw(graphics);
-
-	/*bleh::Color c = bleh::Lerp(bleh::Color{ 1, 0, 0 }, bleh::Color{ 0, 1, 1 }, v);
-	graphics.SetColor(c);
-	bleh::Vector2 p = bleh::Lerp(bleh::Vector2{ 200,200 }, bleh::Vector2{ 600,200 }, v);
-	graphics.DrawString(p.x, p.y, "Last Starfighter");*/
-
-	//if(gameOver) graphics.DrawString(400, 300, "Game Over!");
-
-}
-
-int main()
+void Game::Initialize()
 {
 	/*DWORD time = GetTickCount();
-	std::cout << time/1000/60/60/24 << std::endl;*/
+		std::cout << time/1000/60/60/24 << std::endl;*/
 
 	//intialize engine
-	scene.Startup();
-	particleSystem.Startup();
+	m_scene.Startup();
+	g_particleSystem.Startup();
 
-	//initialize
-	bleh::Actor* player = new Player;
+	Player* player = new Player;
 	player->Load("player.txt");
-	scene.AddActor(player);
+	m_scene.AddActor(player);
 
 	for (size_t i = 0; i < 10; i++)
 	{
@@ -128,18 +33,69 @@ int main()
 		enemy->SetSpeed(bleh::random(50, 100));
 
 		actor->GetTransform().position = bleh::Vector2{ bleh::random(0, 800), bleh::random(0, 600) };
-		scene.AddActor(actor);
+		m_scene.AddActor(actor);
+	}
+}
+
+bool Game::Update(float dt)
+{
+	m_frameTime = dt;
+
+	m_spawnTimer += dt;
+	if (m_spawnTimer >= 3.0f)
+	{
+		m_spawnTimer = 0;
+
+		//spawn enemy
+		Enemy* enemy = new Enemy;
+		enemy->Load("enemy.txt");
+		enemy->SetTarget(m_scene.GetActor<Player>());
+		enemy->SetSpeed(bleh::random(50, 100));
+
+		enemy->GetTransform().position = bleh::Vector2{ bleh::random(0, 800), bleh::random(0, 600) };
+		m_scene.AddActor(enemy);
 	}
 
-	char name[] = "CSC196"; 
-	Core::Init(name, 800, 600); 
-	Core::RegisterUpdateFn(Update); 
-	Core::RegisterDrawFn(Draw);
+	bool quit = Core::Input::IsPressed(Core::Input::KEY_ESCAPE);
 
-	Core::GameLoop(); 
-	Core::Shutdown();
+	int x, y;
+	Core::Input::GetMousePos(x, y);
 
-	//shutdown engine
-	particleSystem.Shutdown();
-	scene.Shutdown();
+	if (Core::Input::IsPressed(Core::Input::BUTTON_LEFT))
+	{
+		bleh::Color colors[] = { {1,1,1}, {1,0,0}, {1,1,0}, {0,1,1} };
+		bleh::Color color = colors[rand() % 4];
+		g_particleSystem.Create({ x,y }, 0, 180, 30, 1, color, 100, 200);
+
+	}
+
+	if (Core::Input::IsPressed('Z'))
+	{
+		bleh::Color colors[] = { {1,1,1}, {1,0,0}, {0,1,1} };
+		bleh::Color color = colors[rand() % 3];
+		g_particleSystem.Create({ x,y }, 0, 180, 30, 1, color, 100, 200);
+
+	}
+
+	g_particleSystem.Update(dt);
+	m_scene.Update(dt);
+
+	return quit;
+}
+
+void Game::Draw(Core::Graphics& graphics)
+{
+	graphics.SetColor(bleh::Color{ 1, 0, 1 });
+	graphics.DrawString(10, 10, std::to_string(m_frameTime).c_str());
+	graphics.DrawString(10, 20, std::to_string(1.0f / m_frameTime).c_str());
+
+	g_particleSystem.Draw(graphics);
+	m_scene.Draw(graphics);
+
+	/*bleh::Color c = bleh::Lerp(bleh::Color{ 1, 0, 0 }, bleh::Color{ 0, 1, 1 }, v);
+	graphics.SetColor(c);
+	bleh::Vector2 p = bleh::Lerp(bleh::Vector2{ 200,200 }, bleh::Vector2{ 600,200 }, v);
+	graphics.DrawString(p.x, p.y, "Last Starfighter");*/
+
+	//if(gameOver) graphics.DrawString(400, 300, "Game Over!");
 }

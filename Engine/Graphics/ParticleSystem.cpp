@@ -3,9 +3,11 @@
 #include "Math/Random.h"
 #include "Math/Math.h"
 
+bleh::ParticleSystem g_particleSystem;
+
 void bleh::ParticleSystem::Startup()
 {
-    m_size = 3000;
+    m_size = 5000;
     m_particles = new Particle[m_size];
 }
 

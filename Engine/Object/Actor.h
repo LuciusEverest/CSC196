@@ -31,6 +31,8 @@ namespace bleh
 		
 		virtual void OnCollision(Actor* actor) {}
 
+		float GetRadius();
+
 		bool IsDestroyed() { return m_destroy; }
 		void SetScene(Scene* scene){ m_scene = scene; }
 		Transform& GetTransform() { return m_transform; } // return the transform

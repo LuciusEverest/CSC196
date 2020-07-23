@@ -25,3 +25,5 @@ namespace bleh
 		size_t m_size;
 	};
 }
+
+extern bleh::ParticleSystem g_particleSystem;
