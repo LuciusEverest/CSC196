@@ -6,15 +6,8 @@
 #include "../Game/Game.h" 
 #include "Graphics/ParticleSystem.h"
 #include "Math/Random.h"
+#include "Enemy.h"
 
-void Player::OnCollision(Actor* actor)
-{
-	if (actor->GetType() == eType::ENEMY)
-	{
-		//m_destroy = true;
-		m_scene->GetGame()->SetState(Game::eState::GAME_OVER);
-	}
-}
 
 bool Player::Load(const std::string& filename)
 {
@@ -81,7 +74,9 @@ void Player::Update(float dt)
 
 	if (force.LengthSqr() > 0)
 	{
-		g_particleSystem.Create(m_transform.position, m_transform.angle + bleh::PI, 20, 1, 1, bleh::Color{ 1, 1, 1 }, 100, 200);
+		bleh::Vector2 childPosition = m_child->GetTransform().matrix.GetPosition();
+
+		g_particleSystem.Create(childPosition, m_transform.angle + bleh::PI, 20, 1, 1, bleh::Color{ 1, 1, 1 }, 100, 200);
 	}
 
 	if (Core::Input::IsPressed('E') && !m_prevButtonPress)
@@ -92,4 +87,31 @@ void Player::Update(float dt)
 	m_prevButtonPress = Core::Input::IsPressed('E');
 
 	m_transform.Update();
+
+	//update children
+	if (m_child)
+	{
+		m_child->Update(dt);
+	}
+}
+
+void Player::OnCollision(Actor* actor)
+{
+	if (!m_destroy && actor->GetType() == eType::ENEMY)
+	{
+		m_destroy = true;
+		m_scene->GetGame()->SetState(Game::eState::PLAYER_DEAD);
+
+		//set target null
+		auto enemies = m_scene->GetActors<Enemy>();
+		for (auto enemy : enemies)
+		{
+			enemy->SetTarget(nullptr);
+		}
+
+		bleh::Color colors[] = { {1,1,0}, {1,0,0}, {0,1,1} };
+		bleh::Color color = colors[rand() % 3];
+		g_particleSystem.Create(m_transform.position, 0, 180, 100, 1, color, 100, 200);
+
+	}
 }

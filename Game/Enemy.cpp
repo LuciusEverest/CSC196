@@ -30,7 +30,8 @@ bool Enemy::Load(const std::string& filename)
 
 void Enemy::Update(float dt)
 {
-	bleh::Vector2 direction = m_target-> GetTransform().position - m_transform.position;
+	bleh::Vector2 targetPosition = (m_target) ? m_target->GetTransform().position : bleh::Vector2{ 400, 300 };
+	bleh::Vector2 direction = targetPosition - m_transform.position;
 	direction.Normalize();
 	bleh::Vector2 velocity = direction * m_speed;
 	m_transform.position = m_transform.position + (velocity * dt);

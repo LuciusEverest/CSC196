@@ -48,6 +48,10 @@ namespace bleh
 			m[0][2] = v.x; m[1][2] = v.y; m[2][2] = 1;
 		}
 
+		Vector2 GetPosition()
+		{
+			return Vector2{ m[0][2] , m[1][2] };
+		}
 
 		void SetIdentity()
 		{

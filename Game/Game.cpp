@@ -9,6 +9,7 @@
 #include <list>
 #include <Scene.h>
 #include <Math\Random.h>
+#include "Actors/Locator.h"
 
 void Game::Initialize()
 {
@@ -46,6 +47,10 @@ bool Game::Update(float dt)
 		player->Load("player.txt");
 		m_scene.AddActor(player);
 
+		Locator* locator = new Locator;
+		locator->GetTransform().position = bleh::Vector2{ 0, 2 };
+		player->SetChild(locator);
+
 		for (size_t i = 0; i < 10; i++)
 			{
 				bleh::Actor* actor = new Enemy;
@@ -79,7 +84,19 @@ bool Game::Update(float dt)
 		}
 		if (m_score > m_highScore) m_highScore = m_score;
 
-		m_scene.Update(dt);
+		break;
+	case Game::eState::PLAYER_DEAD:
+		m_lives = m_lives - 1;
+		m_state = (m_lives <= 0) ? eState::GAME_OVER : eState::GAME_WAIT;
+		m_stateTimer = 3;
+		break;
+	case Game::eState::GAME_WAIT:
+		m_stateTimer -= dt;
+		if (m_stateTimer <= 0)
+		{
+			m_scene.RemoveAllActors();
+			m_state = eState::START_GAME;
+		}
 		break;
 	case Game::eState::GAME_OVER:
 		m_stateTimer += dt;
@@ -89,6 +106,7 @@ bool Game::Update(float dt)
 
 			m_scene.RemoveAllActors();
 			m_state = eState::TITLE;
+			
 		}
 		break;
 	default:
@@ -114,6 +132,7 @@ bool Game::Update(float dt)
 
 	}
 
+	m_scene.Update(dt);
 	g_particleSystem.Update(dt);
 
 	return quit;
@@ -134,9 +153,7 @@ void Game::Draw(Core::Graphics& graphics)
 		break;
 	case Game::eState::GAME:
 	{
-		std::string score = "Score: " + std::to_string(m_score);
-		graphics.DrawString(700, 10, score.c_str());
-		m_scene.Draw(graphics);
+		
 	}
 		break;
 	case Game::eState::GAME_OVER:
@@ -146,15 +163,16 @@ void Game::Draw(Core::Graphics& graphics)
 		break;
 	}
 
-	std::string highScore = "High Score: " + std::to_string(m_highScore);
-	graphics.DrawString(350, 10, highScore.c_str());
+	std::string score = "Score: " + std::to_string(m_score);
+	graphics.DrawString(700, 10, score.c_str());
+		
+	std::string lives = "Lives: " + std::to_string(m_lives);
+	graphics.DrawString(700, 25, lives.c_str());
 
+	score = "High Score: " + std::to_string(m_highScore);
+	graphics.DrawString(350, 10, score.c_str());
+	
+	m_scene.Draw(graphics);
 	g_particleSystem.Draw(graphics);
 
-	/*bleh::Color c = bleh::Lerp(bleh::Color{ 1, 0, 0 }, bleh::Color{ 0, 1, 1 }, v);
-	graphics.SetColor(c);
-	bleh::Vector2 p = bleh::Lerp(bleh::Vector2{ 200,200 }, bleh::Vector2{ 600,200 }, v);
-	graphics.DrawString(p.x, p.y, "Last Starfighter");*/
-
-	//if(gameOver) graphics.DrawString(400, 300, "Game Over!");
 }

@@ -11,6 +11,8 @@ public:
 		INIT_GAME,
 		START_GAME,
 		GAME,
+		PLAYER_DEAD,
+		GAME_WAIT,
 		GAME_OVER
 	};
 
