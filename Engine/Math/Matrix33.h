@@ -48,9 +48,19 @@ namespace bleh
 			m[0][2] = v.x; m[1][2] = v.y; m[2][2] = 1;
 		}
 
-		Vector2 GetPosition()
+		Vector2 GetPosition() const 
 		{
 			return Vector2{ m[0][2] , m[1][2] };
+		}
+
+		Vector2 GetScale() const
+		{
+			return Vector2{ m[0][0], m[1][1] };
+		}
+
+		float GetAngle() const
+		{
+			return std::atan2(m[1][0], m[0][0]);
 		}
 
 		void SetIdentity()

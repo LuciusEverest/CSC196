@@ -5,6 +5,7 @@
 #include "Scene.h" 
 #include "../Game/Game.h" 
 #include "Graphics/ParticleSystem.h"
+#include "Audio/AudioSystem.h"
 #include "Math/Random.h"
 #include "Enemy.h"
 
@@ -38,6 +39,7 @@ void Player::Update(float dt)
 	if(Core::Input::IsPressed(VK_SPACE) && m_fireTimer >= m_fireRate)
 	{
 		m_fireTimer = 0;
+		g_audioSystem.PlayAudio("Laser1");
 
 		Projectile* projectile = new Projectile;
 		projectile->Load("projectile.txt");
@@ -64,19 +66,26 @@ void Player::Update(float dt)
 	m_transform.position = m_transform.position + (m_velocity * dt);
 
 	if (m_transform.position.x > 800) m_transform.position.x = 0;
-	if (m_transform.position.y > 800) m_transform.position.y = 0;
+	if (m_transform.position.y > 600) m_transform.position.y = 0;
 	if (m_transform.position.x < 0)	m_transform.position.x = 800;
-	if (m_transform.position.y < 0)	m_transform.position.y = 800;
+	if (m_transform.position.y < 0)	m_transform.position.y = 600;
 
-	if (Core::Input::IsPressed('A')) m_transform.angle -= dt * bleh::DegreesToRadians(m_rotation);
-	if (Core::Input::IsPressed('D')) m_transform.angle += dt * bleh::DegreesToRadians(m_rotation);
+	//rotation
+	float torque{ 0 };
+	if (Core::Input::IsPressed('A')) torque = -20.0f;
+	if (Core::Input::IsPressed('D')) torque =  20.0f;
 
+	m_angularVelcoity = m_angularVelcoity + (torque * dt);
+	m_angularVelcoity = m_angularVelcoity * 0.95f;
+	m_transform.angle = m_transform.angle + (m_angularVelcoity * dt);
 
 	if (force.LengthSqr() > 0)
 	{
-		bleh::Vector2 childPosition = m_child->GetTransform().matrix.GetPosition();
-
-		g_particleSystem.Create(childPosition, m_transform.angle + bleh::PI, 20, 1, 1, bleh::Color{ 1, 1, 1 }, 100, 200);
+		Actor* child = m_children[0];
+		g_particleSystem.Create(child->GetTransform().matrix.GetPosition(), child->GetTransform().matrix.GetAngle() + bleh::PI, 20, 1, 1, bleh::Color{ 1, 1, 1 }, 100, 200);
+		
+		child = m_children[1];
+		g_particleSystem.Create(child->GetTransform().matrix.GetPosition(), child->GetTransform().matrix.GetAngle() + bleh::PI, 20, 1, 1, bleh::Color{ 1, 1, 1 }, 100, 200);
 	}
 
 	if (Core::Input::IsPressed('E') && !m_prevButtonPress)
@@ -89,9 +98,9 @@ void Player::Update(float dt)
 	m_transform.Update();
 
 	//update children
-	if (m_child)
+	for (auto child : m_children)
 	{
-		m_child->Update(dt);
+		child->Update(dt);  
 	}
 }
 

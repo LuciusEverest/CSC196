@@ -24,4 +24,5 @@ protected:
 	bool m_prevButtonPress{ false };
 
 	bleh::Vector2 m_velocity;
+	float m_angularVelcoity{ 0 };
 };

@@ -48,6 +48,7 @@ namespace bleh
 		{
 			if ((*iter)->IsDestroyed())
 			{
+				(*iter)->Destroy();
 				delete(*iter);
 				iter = m_actors.erase(iter);
 			}

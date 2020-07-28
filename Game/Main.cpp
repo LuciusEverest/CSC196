@@ -9,6 +9,7 @@
 #include "Math/Color.h"
 #include "core.h"
 #include "Game.h"
+#include "Audio/AudioSystem.h"
 #include <time.h>
 
 Game game;
@@ -30,6 +31,7 @@ int main()
 	//startup engine
 	srand(static_cast<unsigned int>(time(NULL)));
 	g_particleSystem.Startup();
+	g_audioSystem.Startup();
 
 	game.Initialize();
 
@@ -40,6 +42,7 @@ int main()
 
 	Core::GameLoop(); 
 	Core::Shutdown();
+	g_audioSystem.Shutdown();
 
 	//shutdown engine
 	/*g_particleSystem.Shutdown();
