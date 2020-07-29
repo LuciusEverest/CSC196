@@ -1,6 +1,7 @@
 #include "Enemy.h"
 #include <fstream>
 #include "Graphics/ParticleSystem.h"  
+#include "Audio/AudioSystem.h"  
 #include "Scene.h"  
 #include "../Game/Game.h"  
 #include <Math\Math.h>
@@ -45,6 +46,7 @@ void Enemy::OnCollision(Actor* actor)
 	if (actor->GetType() == eType::PROJECTILE)
 	{
 		m_destroy = true;
+		g_audioSystem.PlayAudio("Enemy_Hurt");
 
 		// set game points/score
 		m_scene->GetGame()->AddPoints(100);

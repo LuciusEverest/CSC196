@@ -22,6 +22,10 @@ void Game::Initialize()
 		std::cout << time/1000/60/60/24 << std::endl;*/
 	
 	g_audioSystem.AddAudio("Laser1", "Laser1.wav");
+	g_audioSystem.AddAudio("Explosion1", "Explosion1.wav");
+	g_audioSystem.AddAudio("Enemy_Hurt", "Enemy_Hurt.wav");
+	g_audioSystem.AddAudio("Powerup1", "Powerup1.wav");
+	g_audioSystem.AddAudio("Select1", "Select1.wav");
 
 	//intialize engine
 	m_scene.Startup();
@@ -39,6 +43,7 @@ bool Game::Update(float dt)
 	case Game::eState::TITLE:
 		if (Core::Input::IsPressed(VK_SPACE))
 		{
+			g_audioSystem.PlayAudio("Select1");
 			m_state = eState::INIT_GAME;
 		}
 		break;
@@ -83,10 +88,10 @@ bool Game::Update(float dt)
 		break;
 	case Game::eState::GAME:
 		m_spawnTimer += dt;
+		
 		if (m_spawnTimer >= 3.0f)
 		{
 			m_spawnTimer = 0;
-			
 
 			//spawn enemy
 			Enemy* enemy = new Enemy;
@@ -110,14 +115,17 @@ bool Game::Update(float dt)
 		m_stateTimer = 3;
 		break;
 	case Game::eState::GAME_WAIT:
+		
 		m_stateTimer -= dt;
 		if (m_stateTimer <= 0)
 		{
 			m_scene.RemoveAllActors();
 			m_state = eState::START_GAME;
+			g_audioSystem.PlayAudio("End_Timer");
 		}
 		break;
 	case Game::eState::GAME_OVER:
+		
 		m_stateTimer -= dt;
 		if (m_stateTimer <= 0)
 		{
@@ -125,7 +133,7 @@ bool Game::Update(float dt)
 
 			m_scene.RemoveAllActors();
 			m_state = eState::TITLE;
-			
+			g_audioSystem.PlayAudio("Game_Over");
 		}
 		break;
 	default:

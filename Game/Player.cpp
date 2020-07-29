@@ -108,6 +108,7 @@ void Player::OnCollision(Actor* actor)
 {
 	if (!m_destroy && actor->GetType() == eType::ENEMY)
 	{
+		g_audioSystem.PlayAudio("Explosion1");
 		m_destroy = true;
 		m_scene->GetGame()->SetState(Game::eState::PLAYER_DEAD);
 
